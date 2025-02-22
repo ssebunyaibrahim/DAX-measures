@@ -1,0 +1,22 @@
+Calendar = 
+ADDCOLUMNS(
+    CALENDAR(
+        DATE(YEAR(MIN('Fact'[Date])), 01, 01 ),
+        DATE(YEAR(MAX('Fact'[Date])), 12, 31 )
+    ),
+    "Year", YEAR([Date]),
+    "Month", MONTH([Date]),
+    "Month in text", FORMAT([Date], "mmmm", "EN"),
+    "Quarter", QUARTER([Date]),
+    "Day", DAY([Date]),
+    "Week", WEEKNUM([Date]),
+    "Weekday", FORMAT([Date], "dddd", "EN"),  -- Full weekday name (e.g., Monday)
+    "Week End", [Date] + (7 - WEEKDAY([Date],2)), -- Gets the last day (Sunday) of the week
+    "Weekend/Weekday", IF(WEEKDAY([Date],2) > 5, "Weekend", "Weekday") -- Classifies as Weekend or Weekday
+)
+
+
+Calender =
+ADDCOLUMNS(
+  CALENDERAUTO()
+)
