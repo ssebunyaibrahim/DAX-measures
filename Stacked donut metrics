@@ -1,0 +1,15 @@
+Indore trips dummy = ([Total Trips(Indore)]+[Trip diff(Indore)])*1/3
+
+Target trips(Indore) = 
+    CALCULATE(SUM(monthly_target_trips[total_target_trips]),
+    dim_city[city_name]="Indore")
+
+Total Trips = COUNT(fact_trips[trip_id])
+
+Total Trips(Indore) = CALCULATE(
+    COUNT(fact_trips[trip_id]),dim_city[city_name]="Indore")
+
+Trip diff(Indore) = 
+var x= [Target trips(Indore)]-[Total Trips(Indore)]
+RETURN
+if(x>0,x,0)
