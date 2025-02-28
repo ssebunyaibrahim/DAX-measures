@@ -1,0 +1,19 @@
+Users YTD = TOTALYTD([Total users],'Subscription date'[Date])
+
+
+Users RT = 
+VAR Maxdate = MAX('Subscription date'[Date])
+VAR Result =
+    CALCULATE(
+        [Total users],
+        'Subscription date'[Date]<=Maxdate,
+        ALL('Subscription date'))
+RETURN Result
+
+
+
+Users Growth Rate = 
+VAR previous = CALCULATE([Users YTD],PREVIOUSMONTH('Subscription date'[Date]))
+VAR now = [Users YTD]
+RETURN
+    DIVIDE(now-previous,previous,0)
