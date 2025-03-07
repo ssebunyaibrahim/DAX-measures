@@ -1,0 +1,224 @@
+## **Time Intelligence in DAX (Power BI) – Complete Guide**  
+
+### **What is Time Intelligence?**  
+Time Intelligence in **DAX (Data Analysis Expressions)** refers to a set of functions that allow you to perform calculations over **time periods** (days, months, quarters, years, etc.). These functions help analyze trends, compare periods, and aggregate data dynamically based on a selected timeframe.  
+
+### **Key Concepts in Time Intelligence**  
+1. **Date Table Requirement** – You must have a **date table** with a continuous date range.  
+2. **Date Column Marked as Date Table** – The **date table** should be marked as a **date table** in Power BI to ensure time functions work correctly.  
+3. **Relationships** – The date table should be related to your fact table using a date field.  
+
+---
+
+## **Categories of Time Intelligence Functions**
+Time intelligence functions in DAX are mainly divided into the following categories:  
+
+1. **Aggregations Over Time**
+2. **Comparisons Between Periods**
+3. **Rolling Aggregations (Moving Averages, YTD, QTD, MTD)**
+4. **Advanced Calculations (Custom Periods, Running Totals, etc.)**
+
+---
+
+## **1. Aggregations Over Time**  
+### **TOTALYTD, TOTALQTD, TOTALMTD**  
+These functions calculate year-to-date, quarter-to-date, and month-to-date totals.
+
+#### **Example: Year-to-Date Sales**  
+```DAX
+SalesYTD = 
+TOTALYTD(
+    SUM(Sales[SalesAmount]), 
+    'Date'[Date]
+)
+```
+🔹 **How It Works?**  
+- The function sums the sales amount up to the current date within the year.
+
+#### **Example: Quarter-to-Date Sales**
+```DAX
+SalesQTD = 
+TOTALQTD(
+    SUM(Sales[SalesAmount]), 
+    'Date'[Date]
+)
+```
+🔹 **How It Works?**  
+- It sums sales from the start of the quarter to the selected date.
+
+#### **Example: Month-to-Date Sales**
+```DAX
+SalesMTD = 
+TOTALMTD(
+    SUM(Sales[SalesAmount]), 
+    'Date'[Date]
+)
+```
+
+---
+
+## **2. Comparisons Between Periods**
+These functions help compare data between different time periods.
+
+### **PREVIOUSYEAR, PREVIOUSMONTH, PREVIOUSQUARTER**
+These functions return the value for the previous time period.
+
+#### **Example: Sales Last Year**
+```DAX
+SalesLastYear = 
+CALCULATE(
+    SUM(Sales[SalesAmount]), 
+    PREVIOUSYEAR('Date'[Date])
+)
+```
+🔹 **How It Works?**  
+- Returns the total sales from the same period in the previous year.
+
+#### **Example: Sales Last Month**
+```DAX
+SalesLastMonth = 
+CALCULATE(
+    SUM(Sales[SalesAmount]), 
+    PREVIOUSMONTH('Date'[Date])
+)
+```
+🔹 **How It Works?**  
+- Retrieves sales data from the previous month.
+
+#### **Example: Sales Last Quarter**
+```DAX
+SalesLastQuarter = 
+CALCULATE(
+    SUM(Sales[SalesAmount]), 
+    PREVIOUSQUARTER('Date'[Date])
+)
+```
+
+---
+
+### **SAMEPERIODLASTYEAR**
+This function shifts the current period back one year.
+
+#### **Example: Sales for the Same Period Last Year**
+```DAX
+SalesSamePeriodLastYear = 
+CALCULATE(
+    SUM(Sales[SalesAmount]), 
+    SAMEPERIODLASTYEAR('Date'[Date])
+)
+```
+🔹 **How It Works?**  
+- If a date range from Jan 1 - Jan 31, 2025, is selected, it returns sales from Jan 1 - Jan 31, 2024.
+
+---
+
+### **DATEADD**
+This function shifts a date range forward or backward.
+
+#### **Example: Sales Shifted by One Month**
+```DAX
+SalesLastMonth = 
+CALCULATE(
+    SUM(Sales[SalesAmount]), 
+    DATEADD('Date'[Date], -1, MONTH)
+)
+```
+🔹 **How It Works?**  
+- Moves the selected date range **one month back**.
+
+#### **Example: Sales Two Years Ago**
+```DAX
+SalesTwoYearsAgo = 
+CALCULATE(
+    SUM(Sales[SalesAmount]), 
+    DATEADD('Date'[Date], -2, YEAR)
+)
+```
+🔹 **How It Works?**  
+- Moves the selected date range **two years back**.
+
+---
+
+## **3. Rolling Aggregations (Moving Averages, YTD, QTD, MTD)**  
+### **DATESYTD, DATESQTD, DATESMTD**
+These functions return a range of dates from the start of a year, quarter, or month to the selected date.
+
+#### **Example: Year-to-Date Sales Using DATESYTD**
+```DAX
+SalesYTD = 
+CALCULATE(
+    SUM(Sales[SalesAmount]), 
+    DATESYTD('Date'[Date])
+)
+```
+🔹 **How It Works?**  
+- Filters the dates from the start of the year to the selected date.
+
+#### **Example: Rolling 12-Month Sales**
+```DAX
+Rolling12MonthsSales = 
+CALCULATE(
+    SUM(Sales[SalesAmount]), 
+    DATESINPERIOD('Date'[Date], MAX('Date'[Date]), -12, MONTH)
+)
+```
+🔹 **How It Works?**  
+- Aggregates sales for the last 12 months from the **latest** date in the selected range.
+
+---
+
+## **4. Advanced Calculations**
+### **RUNNING TOTAL (Cumulative Sales)**
+#### **Example: Running Total by Month**
+```DAX
+RunningTotalSales = 
+CALCULATE(
+    SUM(Sales[SalesAmount]), 
+    FILTER(
+        ALL('Date'), 
+        'Date'[Date] <= MAX('Date'[Date])
+    )
+)
+```
+🔹 **How It Works?**  
+- Accumulates sales over time, **keeping** all past months in the calculation.
+
+---
+
+### **CUSTOM PERIOD COMPARISONS**
+#### **Example: Sales Last 30 Days**
+```DAX
+SalesLast30Days = 
+CALCULATE(
+    SUM(Sales[SalesAmount]), 
+    DATESINPERIOD('Date'[Date], MAX('Date'[Date]), -30, DAY)
+)
+```
+🔹 **How It Works?**  
+- Filters data for the last 30 days.
+
+#### **Example: Sales Between Two Dates**
+```DAX
+SalesBetweenDates = 
+CALCULATE(
+    SUM(Sales[SalesAmount]), 
+    'Date'[Date] >= DATE(2024,1,1) && 'Date'[Date] <= DATE(2024,12,31)
+)
+```
+🔹 **How It Works?**  
+- Filters sales only for **2024**.
+
+---
+
+## **Best Practices for Using Time Intelligence in Power BI**
+✅ **Use a Proper Date Table** – Always create and mark a date table.  
+✅ **Use CALCULATE for Custom Filters** – Most time functions require `CALCULATE` for context modification.  
+✅ **Understand Date Ranges** – Functions like `DATEADD` and `DATESINPERIOD` shift dates differently.  
+✅ **Optimize Performance** – Large datasets can slow down calculations, use filters wisely.  
+
+---
+
+## **Final Thoughts**
+Time Intelligence in DAX is **powerful** for analyzing trends, comparing time periods, and aggregating data over time. By mastering functions like `TOTALYTD`, `SAMEPERIODLASTYEAR`, `DATEADD`, and `DATESINPERIOD`, you can create **dynamic** and **insightful** Power BI reports.
+
+🚀 **What’s Next?** Let me know if you need more **custom examples** or help with **specific time-based calculations!** 😊
