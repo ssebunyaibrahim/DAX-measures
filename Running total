@@ -17,3 +17,9 @@ VAR previous = CALCULATE([Users YTD],PREVIOUSMONTH('Subscription date'[Date]))
 VAR now = [Users YTD]
 RETURN
     DIVIDE(now-previous,previous,0)
+
+Average users growth rate = 
+AVERAGEX(
+    FILTER(VALUES('Subscription date'[Date].[Month]),NOT 'Subscription date'[Date].[Month] IN {"January","December"}),
+    [MoM users growth rate]
+    )
