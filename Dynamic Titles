@@ -1,1 +1,40 @@
+In Power BI, you can create a dynamic title using **DAX** based on a slicer selection. Here’s a DAX measure that will update the title dynamically based on the selection from a slicer:
 
+### **DAX for Dynamic Title:**
+```DAX
+DynamicTitle = 
+VAR SelectedValue = SELECTEDVALUE('YourTable'[YourColumn])
+RETURN 
+IF(
+    ISBLANK(SelectedValue), 
+    "Default Title - Select a Value", 
+    "Selected: " & SelectedValue
+)
+```
+
+### **Explanation:**
+- `SELECTEDVALUE('YourTable'[YourColumn])`: Retrieves the value selected in the slicer.
+- If no value is selected (`ISBLANK`), it displays `"Default Title - Select a Value"`.
+- Otherwise, it updates the title with `"Selected: "` followed by the chosen value.
+
+### **Handling Multiple Selections:**
+If users can select multiple values, you can modify the measure like this:
+
+```DAX
+DynamicTitle = 
+VAR SelectedValues = CONCATENATEX(VALUES('YourTable'[YourColumn]), 'YourTable'[YourColumn], ", ")
+RETURN 
+IF(
+    ISBLANK(SelectedValues), 
+    "Default Title - Select a Value", 
+    "Selected: " & SelectedValues
+)
+```
+This will concatenate multiple selected values with a comma.
+
+### **How to Use in Power BI:**
+1. Create a new **Measure** in Power BI using the above DAX code.
+2. Insert a **Card Visual** and set the `DynamicTitle` measure as its value.
+3. The title will update dynamically based on slicer selection.
+
+Let me know if you need modifications! 🚀
