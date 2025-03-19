@@ -1,0 +1,126 @@
+DAX FORMAT Function - Everything You Need to Know
+The FORMAT function in DAX converts a value into a string using a specified format. It is primarily used for custom formatting of numbers, dates, and times in Power BI and Power Pivot. However, since it returns a string, the result cannot be used for calculations.
+
+1. Syntax
+DAX
+Copy
+Edit
+FORMAT(value, format_string, [locale_name])
+value: The number or date/time value to format.
+format_string: A string defining the desired format.
+locale_name (optional): Specifies the locale for formatting.
+2. Number Formatting
+Basic Number Formats
+DAX
+Copy
+Edit
+FORMAT(1234.56, "0")       -- "1235"  (Rounds to the nearest whole number)
+FORMAT(1234.56, "0.00")    -- "1234.56"  (Two decimal places)
+FORMAT(1234.56, "#,##0")   -- "1,235"  (Thousand separator)
+FORMAT(1234.56, "#,##0.00")-- "1,234.56" (Thousand separator + 2 decimals)
+FORMAT(0.567, "0%")        -- "57%" (Percentage format)
+FORMAT(0.567, "0.00%")     -- "56.70%" (Percentage with two decimals)
+3. Currency Formatting
+DAX supports currency formatting based on locale:
+
+DAX
+Copy
+Edit
+FORMAT(1234.56, "C")   -- "$1,234.56" (Default locale currency)
+FORMAT(1234.56, "C0")  -- "$1,235" (Rounded currency)
+FORMAT(1234.56, "€#,##0.00") -- "€1,234.56" (Custom currency format)
+You can also specify locale-specific currency formats:
+
+DAX
+Copy
+Edit
+FORMAT(1234.56, "C", "en-GB") -- "£1,234.56" (British Pounds)
+FORMAT(1234.56, "C", "fr-FR") -- "1 234,56 €" (French format)
+4. Date & Time Formatting
+DAX provides extensive control over date/time formatting.
+
+Basic Date Formats
+DAX
+Copy
+Edit
+FORMAT(TODAY(), "yyyy-MM-dd")   -- "2025-03-19"
+FORMAT(TODAY(), "dd/MM/yyyy")   -- "19/03/2025"
+FORMAT(TODAY(), "MM/dd/yyyy")   -- "03/19/2025"
+FORMAT(TODAY(), "dddd, MMMM d") -- "Wednesday, March 19"
+Time Formats
+DAX
+Copy
+Edit
+FORMAT(NOW(), "hh:mm:ss")       -- "14:30:15"
+FORMAT(NOW(), "hh:mm tt")       -- "02:30 PM"
+FORMAT(NOW(), "HH:mm:ss")       -- "14:30:15" (24-hour format)
+Custom Date & Time Formats
+DAX
+Copy
+Edit
+FORMAT(NOW(), "MMMM yyyy")  -- "March 2025"
+FORMAT(NOW(), "MMM dd, yyyy hh:mm:ss tt") -- "Mar 19, 2025 02:30:15 PM"
+5. Time Intelligence Formatting
+When working with time intelligence calculations (e.g., year-to-date, month-to-date, etc.), FORMAT helps display results clearly.
+
+Year & Quarter Formatting
+DAX
+Copy
+Edit
+FORMAT(TODAY(), "yyyy")     -- "2025"  (Year only)
+FORMAT(TODAY(), "QQQ yyyy") -- "Q1 2025" (Quarter format)
+FORMAT(TODAY(), "MMMM yyyy") -- "March 2025" (Month and year)
+Week Formatting
+DAX
+Copy
+Edit
+FORMAT(TODAY(), "ww")  -- "12" (Week number)
+FORMAT(TODAY(), "ddd") -- "Wed" (Short day name)
+FORMAT(TODAY(), "dddd")-- "Wednesday" (Full day name)
+Day Formatting
+DAX
+Copy
+Edit
+FORMAT(TODAY(), "d")   -- "19" (Day number)
+FORMAT(TODAY(), "dd")  -- "19" (Two-digit day)
+FORMAT(TODAY(), "ddd") -- "Wed" (Abbreviated day)
+FORMAT(TODAY(), "dddd")-- "Wednesday" (Full day name)
+Full Date & Time Formatting
+DAX
+Copy
+Edit
+FORMAT(NOW(), "yyyy-MM-dd HH:mm:ss") -- "2025-03-19 14:30:15"
+FORMAT(NOW(), "dddd, MMMM d, yyyy")  -- "Wednesday, March 19, 2025"
+FORMAT(NOW(), "MMMM d, yyyy hh:mm tt") -- "March 19, 2025 02:30 PM"
+6. Common Use Cases
+Displaying a Percentage
+DAX
+Copy
+Edit
+SalesGrowth = FORMAT([GrowthMeasure], "0.00%")
+Showing Quarter & Year
+DAX
+Copy
+Edit
+QuarterYear = FORMAT(TODAY(), "QQQ yyyy")
+Formatting Currency with Custom Symbols
+DAX
+Copy
+Edit
+FormattedRevenue = FORMAT([Revenue], "$#,##0.00")
+Dynamic Date Labels
+DAX
+Copy
+Edit
+DateLabel = "Data as of " & FORMAT(TODAY(), "MMMM yyyy")
+7. Key Limitations of FORMAT
+Returns a String – Since FORMAT outputs text, you cannot use it for calculations.
+Performance Impact – FORMAT can slow down performance in large datasets because text operations are more expensive than numerical calculations.
+Cannot Be Used for Sorting – Since formatted values are text, they do not sort correctly in numerical order.
+8. Alternative Approach for Performance
+Instead of FORMAT, use built-in formatting via the Modeling tab in Power BI for numbers and dates. This ensures better performance while keeping the data numeric.
+
+Final Thoughts
+The FORMAT function is powerful for displaying numbers, dates, and times in a user-friendly way. However, since it converts values to text, it should be used primarily for display purposes rather than for calculations.
+
+Would you like examples for a specific scenario in your Power BI reports? 🚀
